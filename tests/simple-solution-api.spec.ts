@@ -61,7 +61,6 @@ test('post order with incorrect data should receive code 400', async ({ request 
     customerName: 'string',
     customerPhone: 'string',
     comment: 'string',
-
   }
   // Send a POST request to the server
   const response = await request.post('https://backend.tallinn-learning.ee/test-orders', {
