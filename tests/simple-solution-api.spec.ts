@@ -34,7 +34,7 @@ test('get order with wrong ID should receive code 400', async ({ request }) => {
 })
 
 // POST endpoint
-test('post order with correct data should receive code 201', async ({ request }) => {
+test('post order with correct data should receive code 200', async ({ request }) => {
   // prepare request body
   const requestBody = {
     status: 'OPEN',
@@ -75,6 +75,7 @@ test('post order with incorrect data should receive code 400', async ({ request 
   expect(response.status()).toBe(StatusCodes.BAD_REQUEST)
 })
 
+// Homework assignment
 // PUT endpoint
 test('update order with valid ID and valid API key should receive 200 OK', async ({ request }) => {
   const requestBody = {
@@ -89,7 +90,7 @@ test('update order with valid ID and valid API key should receive 200 OK', async
   const requestHeaders = {
     api_key: '1234567890123456',
   }
-  // Send a POST request to the server
+  // Send a PUT request to the server
   const response = await request.put('https://backend.tallinn-learning.ee/test-orders/5', {
     data: requestBody,
     headers: requestHeaders,
@@ -128,7 +129,7 @@ test('update order with empty request body should receive 400 Bad Request', asyn
   const requestHeaders = {
     api_key: '1234567890123456',
   }
-  // Send a POST request to the server
+  // Send a PUT request to the server
   const response = await request.put('https://backend.tallinn-learning.ee/test-orders/5', {
     headers: requestHeaders,
   })
@@ -154,7 +155,7 @@ test('delete order with valid ID and valid API key should receive 204 No Content
   const requestHeaders = {
     api_key: '1234567890123456',
   }
-  // Send a POST request to the server
+  // Send a DELETE request to the server
   const response = await request.delete('https://backend.tallinn-learning.ee/test-orders/5', {
     data: requestBody,
     headers: requestHeaders,
@@ -178,7 +179,7 @@ test('delete order with invalid API key should receive 401 Unauthorized', async 
   const requestHeaders = {
     api_key: '111',
   }
-  // Send a POST request to the server
+  // Send a DELETE request to the server
   const response = await request.delete('https://backend.tallinn-learning.ee/test-orders/5', {
     data: requestBody,
     headers: requestHeaders,
@@ -202,7 +203,7 @@ test('delete order with missing API key should receive 401 Unauthorized', async 
   const requestHeaders = {
     api_key: '',
   }
-  // Send a POST request to the server
+  // Send a DELETE request to the server
   const response = await request.delete('https://backend.tallinn-learning.ee/test-orders/5', {
     data: requestBody,
     headers: requestHeaders,
@@ -228,7 +229,7 @@ test('login with valid username and password should receive 200 OK', async ({ re
     username: 'Peter',
     password: 'password123',
   }
-  // Send a POST request to the server
+  // Send a GET request to the server
   const response = await request.get('https://backend.tallinn-learning.ee/test-orders/5', {
     data: requestBody,
     headers: requestHeaders,
@@ -242,7 +243,7 @@ test('login with valid username and password should receive 200 OK', async ({ re
 test('login with missing username and password should receive 500 Internal Server Error', async ({
   request,
 }) => {
-  // Send a POST request to the server
+  // Send a GET request to the server
   const response = await request.get('https://backend.tallinn-learning.ee/test-orders', {})
   // Log the response status and body
   console.log('response status:', response.status())
