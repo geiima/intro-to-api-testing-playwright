@@ -63,6 +63,7 @@ test('post order with incorrect data should receive code 400', async ({ request 
     customerName: 'string',
     customerPhone: 'string',
     comment: 'string',
+    id: 0,
   }
   // Send a POST request to the server
   const response = await request.post('https://backend.tallinn-learning.ee/test-orders', {
@@ -75,13 +76,14 @@ test('post order with incorrect data should receive code 400', async ({ request 
 })
 
 // PUT endpoint
-test('update order with valid ID and valid API key', async ({ request }) => {
+test('update order with valid ID and valid API key should receive 200 OK', async ({ request }) => {
   const requestBody = {
     status: 'OPEN',
     courierId: 0,
     customerName: 'string',
     customerPhone: 'string',
     comment: 'string',
+    id: 5,
   }
 
   const requestHeaders = {
@@ -98,13 +100,14 @@ test('update order with valid ID and valid API key', async ({ request }) => {
   expect(response.status()).toBe(StatusCodes.OK)
 })
 
-test('update order with missing API key ', async ({ request }) => {
+test('update order with missing API key should receive 401 Unauthorized', async ({ request }) => {
   const requestBody = {
     status: 'OPEN',
     courierId: 0,
     customerName: 'string',
     customerPhone: 'string',
     comment: 'string',
+    id: 5,
   }
 
   const requestHeaders = {
@@ -121,7 +124,7 @@ test('update order with missing API key ', async ({ request }) => {
   expect(response.status()).toBe(StatusCodes.UNAUTHORIZED)
 })
 
-test('update order with empty request body  ', async ({ request }) => {
+test('update order with empty request body should receive 400 Bad Request', async ({ request }) => {
   const requestHeaders = {
     api_key: '1234567890123456',
   }
@@ -136,13 +139,16 @@ test('update order with empty request body  ', async ({ request }) => {
 })
 
 // DELETE endpoint
-test('delete order with valid ID and valid API key', async ({ request }) => {
+test('delete order with valid ID and valid API key should receive 204 No Content', async ({
+  request,
+}) => {
   const requestBody = {
     status: 'OPEN',
     courierId: 0,
     customerName: 'string',
     customerPhone: 'string',
     comment: 'string',
+    id: 5,
   }
 
   const requestHeaders = {
@@ -159,13 +165,14 @@ test('delete order with valid ID and valid API key', async ({ request }) => {
   expect(response.status()).toBe(StatusCodes.NO_CONTENT)
 })
 
-test('delete order with invalid API key', async ({ request }) => {
+test('delete order with invalid API key should receive 401 Unauthorized', async ({ request }) => {
   const requestBody = {
     status: 'OPEN',
     courierId: 0,
     customerName: 'string',
     customerPhone: 'string',
     comment: 'string',
+    id: 5,
   }
 
   const requestHeaders = {
@@ -182,13 +189,14 @@ test('delete order with invalid API key', async ({ request }) => {
   expect(response.status()).toBe(StatusCodes.UNAUTHORIZED)
 })
 
-test('delete order with missing API key', async ({ request }) => {
+test('delete order with missing API key should receive 401 Unauthorized', async ({ request }) => {
   const requestBody = {
     status: 'OPEN',
     courierId: 0,
     customerName: 'string',
     customerPhone: 'string',
     comment: 'string',
+    id: 5,
   }
 
   const requestHeaders = {
@@ -206,13 +214,14 @@ test('delete order with missing API key', async ({ request }) => {
 })
 
 // GET endpoint
-test('login with valid username and password', async ({ request }) => {
+test('login with valid username and password should receive 200 OK', async ({ request }) => {
   const requestBody = {
     status: 'OPEN',
     courierId: 0,
     customerName: 'string',
     customerPhone: 'string',
     comment: 'string',
+    id: 5,
   }
 
   const requestHeaders = {
@@ -230,7 +239,9 @@ test('login with valid username and password', async ({ request }) => {
   expect(response.status()).toBe(StatusCodes.OK)
 })
 
-test('login with missing username and password', async ({ request }) => {
+test('login with missing username and password should receive 500 Internal Server Error', async ({
+  request,
+}) => {
   // Send a POST request to the server
   const response = await request.get('https://backend.tallinn-learning.ee/test-orders', {})
   // Log the response status and body
