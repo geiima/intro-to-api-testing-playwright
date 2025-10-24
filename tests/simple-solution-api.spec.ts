@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 import { StatusCodes } from 'http-status-codes'
+import { OrderDto } from '../dto/order-dto'
 
 // GET endpoint
 test('get order with correct id should receive code 200', async ({ request }) => {
@@ -77,49 +78,46 @@ test('post order with incorrect data should receive code 400', async ({ request 
 
 // Homework assignment
 // PUT endpoint
-test('update order with valid ID and valid API key should receive 200 OK', async ({ request }) => {
-  const requestBody = {
-    status: 'OPEN',
-    courierId: 0,
-    customerName: 'string',
-    customerPhone: 'string',
-    comment: 'string',
-    id: 5,
-  }
 
+test('update order with valid ID and valid API key should receive 200 OK', async ({ request }) => {
+  const requestBody = OrderDto.createOrderWithRandomData()
   const requestHeaders = {
     api_key: '1234567890123456',
   }
-  // Send a PUT request to the server
   const response = await request.put('https://backend.tallinn-learning.ee/test-orders/5', {
     data: requestBody,
     headers: requestHeaders,
   })
-  // Log the response status and body
   console.log('response status:', response.status())
   console.log('response body:', await response.json())
   expect(response.status()).toBe(StatusCodes.OK)
 })
 
 test('update order with missing API key should receive 401 Unauthorized', async ({ request }) => {
-  const requestBody = {
-    status: 'OPEN',
-    courierId: 0,
-    customerName: 'string',
-    customerPhone: 'string',
-    comment: 'string',
-    id: 5,
-  }
-
+  const requestBody = new OrderDto('Peter', '123456789', 'comment', 1)
   const requestHeaders = {
     api_key: '',
   }
-  // Send a POST request to the server
   const response = await request.put('https://backend.tallinn-learning.ee/test-orders/5', {
     data: requestBody,
     headers: requestHeaders,
   })
-  // Log the response status and body
+  console.log('response status:', response.status())
+  console.log('response body:', await response.text())
+  expect(response.status()).toBe(StatusCodes.UNAUTHORIZED)
+})
+
+// Additionally added  test
+
+test('update order with invalid API key should receive 401 Unauthorized', async ({ request }) => {
+  const requestBody = OrderDto.createOrderWithLowPriority()
+  const requestHeaders = {
+    api_key: '123',
+  }
+  const response = await request.put('https://backend.tallinn-learning.ee/test-orders/5', {
+    data: requestBody,
+    headers: requestHeaders,
+  })
   console.log('response status:', response.status())
   console.log('response body:', await response.text())
   expect(response.status()).toBe(StatusCodes.UNAUTHORIZED)
@@ -129,11 +127,9 @@ test('update order with empty request body should receive 400 Bad Request', asyn
   const requestHeaders = {
     api_key: '1234567890123456',
   }
-  // Send a PUT request to the server
   const response = await request.put('https://backend.tallinn-learning.ee/test-orders/5', {
     headers: requestHeaders,
   })
-  // Log the response status and body
   console.log('response status:', response.status())
   console.log('response body:', await response.text())
   expect(response.status()).toBe(StatusCodes.BAD_REQUEST)
