@@ -14,7 +14,6 @@
 | POST/loan-calc-decision | Positive decision (Medium risk)              | 200 OK                    | ✅          |
 | POST/loan-calc-decision | Negative decition (Very High risk)           | 200 OK                    | ✅          |
 | POST/loan-calc-decision | Invalid loan request                         | 400 Bad Request           | ✅          |
-| Edge cases              |
 | POST/loan-calc-decision | Extremely large loan amount (Very High risk) | 200 OK                    | ✅          |
 | POST/loan-calc-decision | Very short loan period (Uknown risk)         | 200 OK                    | ✅          |
 | POST/loan-calc-decision | Very old applicant (Medium risk)             | 200 OK                    | ✅          |
