@@ -10,7 +10,6 @@ test.describe('Loan risk decision API tests', () => {
       'https://backend.tallinn-learning.ee/api/loan-calc/decision',
       {
         data: requestBody,
-        headers: { 'Content-Type': 'application/json' },
       },
     )
 
@@ -32,7 +31,6 @@ test.describe('Loan risk decision API tests', () => {
       'https://backend.tallinn-learning.ee/api/loan-calc/decision',
       {
         data: requestBody,
-        headers: { 'Content-Type': 'application/json' },
       },
     )
 
@@ -54,7 +52,6 @@ test.describe('Loan risk decision API tests', () => {
       'https://backend.tallinn-learning.ee/api/loan-calc/decision',
       {
         data: requestBody,
-        headers: { 'Content-Type': 'application/json' },
       },
     )
     expect.soft(response.status()).toBe(StatusCodes.OK)
@@ -75,7 +72,6 @@ test.describe('Loan risk decision API tests', () => {
       'https://backend.tallinn-learning.ee/api/loan-calc/decision',
       {
         data: requestBody,
-        headers: { 'Content-Type': 'application/json' },
       },
     )
     const responseText = await response.text()
@@ -97,7 +93,6 @@ test.describe('Edge cases', () => {
       'https://backend.tallinn-learning.ee/api/loan-calc/decision',
       {
         data: requestBody,
-        headers: { 'Content-Type': 'application/json' },
       },
     )
     expect.soft(response.status()).toBe(StatusCodes.OK)
@@ -118,7 +113,6 @@ test.describe('Edge cases', () => {
       'https://backend.tallinn-learning.ee/api/loan-calc/decision',
       {
         data: requestBody,
-        headers: { 'Content-Type': 'application/json' },
       },
     )
     expect.soft(response.status()).toBe(StatusCodes.OK)
@@ -139,7 +133,6 @@ test.describe('Edge cases', () => {
       'https://backend.tallinn-learning.ee/api/loan-calc/decision',
       {
         data: requestBody,
-        headers: { 'Content-Type': 'application/json' },
       },
     )
     expect.soft(response.status()).toBe(StatusCodes.OK)
@@ -154,13 +147,12 @@ test.describe('Edge cases', () => {
     console.log('response body:', responseBody)
   })
 
+  // test with deleted requestBody, more compact and simple
   test('High income but unemployed loan should return 200 OK', async ({ request }) => {
-    const requestBody = LoanRequestDTO.createHighIncomeUnemployedRequest()
     const response = await request.post(
       'https://backend.tallinn-learning.ee/api/loan-calc/decision',
       {
-        data: requestBody,
-        headers: { 'Content-Type': 'application/json' },
+        data: LoanRequestDTO.createHighIncomeUnemployedRequest(),
       },
     )
     expect.soft(response.status()).toBe(StatusCodes.OK)
