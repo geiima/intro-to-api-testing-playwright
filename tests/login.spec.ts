@@ -3,14 +3,13 @@ import { StatusCodes } from 'http-status-codes'
 import { LoginDto } from '../dto/login-dto'
 
 test('should return token with correct username and password', async ({ request }) => {
-// prepare request body
- // const requestBody = new LoginDto('eimanteb', 'whe7s5qbYbfT2n')
+  // prepare request body
+  // const requestBody = new LoginDto('eimanteb', 'whe7s5qbYbfT2n')
   const requestBody = LoginDto.createLoginDto()
-
-// send POST request to server
+  // send POST request to server
   const response = await request.post('https://backend.tallinn-learning.ee/login/student', {
     data: requestBody,
-    })
+  })
 
   console.log('response body and token', await response.text())
   expect(response.status()).toBe(StatusCodes.OK)
@@ -18,10 +17,10 @@ test('should return token with correct username and password', async ({ request 
 
 // negative test case
 test('should not return token with incorrect username and password', async ({ request }) => {
-// prepare request body
+  // prepare request body
   const requestBody = new LoginDto('eimantebbb', '')
 
-// send POST request to server
+  // send POST request to server
   const response = await request.post('https://backend.tallinn-learning.ee/login/student', {
     data: requestBody,
   })
