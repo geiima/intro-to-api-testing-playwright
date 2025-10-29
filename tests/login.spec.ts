@@ -12,7 +12,6 @@ test.describe('Positive scenarios', () => {
     const jwtValue = await response.text()
     const jwtRegex = /^eyJhb[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/
     expect(jwtValue).toMatch(jwtRegex)
-    //console.log('response body and token', await response.text())
   })
 
   test('should return non-empty token ', async ({ request }) => {
@@ -23,7 +22,6 @@ test.describe('Positive scenarios', () => {
     expect(response.status()).toBe(StatusCodes.OK)
     const jwtValue = await response.text()
     expect(jwtValue).not.toBe('')
-    //console.log('response body and token', await response.text())
   })
 })
 
@@ -33,7 +31,7 @@ test.describe('Negative scenarios', () => {
     const response = await request.post('https://backend.tallinn-learning.ee/login/student', {
       data: requestBody,
     })
-    //console.log('response body and token', await response.text())
+
     expect(response.status()).toBe(StatusCodes.UNAUTHORIZED)
   })
 
@@ -42,7 +40,7 @@ test.describe('Negative scenarios', () => {
     const response = await request.get('https://backend.tallinn-learning.ee/login/student', {
       data: requestBody,
     })
-    //console.log('response body and token', await response.text())
+
     expect(response.status()).toBe(StatusCodes.METHOD_NOT_ALLOWED)
   })
 
@@ -51,7 +49,7 @@ test.describe('Negative scenarios', () => {
     const response = await request.post('https://backend.tallinn-learning.ee/login/student', {
       data: invalidBody,
     })
-    //console.log('response body and token', await response.text())
+
     expect(response.status()).toBe(StatusCodes.UNAUTHORIZED)
   })
 })
