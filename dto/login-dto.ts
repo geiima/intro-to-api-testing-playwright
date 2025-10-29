@@ -10,4 +10,3 @@ export class LoginDto {
     return new LoginDto(process.env.USER || '', process.env.PASSWORD || '')
   }
 }
-
