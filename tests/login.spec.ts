@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 import { StatusCodes } from 'http-status-codes'
 import { LoginDto } from '../dto/login-dto'
 
-test.describe('Positive scenarios', () => {
+test.describe('Positive scenario', () => {
   test('should return token with correct username and password', async ({ request }) => {
     const requestBody = LoginDto.createLoginDto()
     const response = await request.post('https://backend.tallinn-learning.ee/login/student', {
@@ -12,15 +12,6 @@ test.describe('Positive scenarios', () => {
     const jwtValue = await response.text()
     const jwtRegex = /^eyJhb[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/
     expect(jwtValue).toMatch(jwtRegex)
-  })
-
-  test('should return non-empty token ', async ({ request }) => {
-    const requestBody = LoginDto.createLoginDto()
-    const response = await request.post('https://backend.tallinn-learning.ee/login/student', {
-      data: requestBody,
-    })
-    expect(response.status()).toBe(StatusCodes.OK)
-    const jwtValue = await response.text()
     expect(jwtValue).not.toBe('')
   })
 })
@@ -31,8 +22,11 @@ test.describe('Negative scenarios', () => {
     const response = await request.post('https://backend.tallinn-learning.ee/login/student', {
       data: requestBody,
     })
+    const responseBody = await response.text()
+    const jwtRegex = /^eyJhb[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/
 
     expect(response.status()).toBe(StatusCodes.UNAUTHORIZED)
+    expect(responseBody).not.toMatch(jwtRegex)
   })
 
   test('should not return token with incorrect HTTP method', async ({ request }) => {
@@ -44,7 +38,7 @@ test.describe('Negative scenarios', () => {
     expect(response.status()).toBe(StatusCodes.METHOD_NOT_ALLOWED)
   })
 
-  test('should not return token with incorrect body structure', async ({ request }) => {
+  test('should respond with 401 for invalid body structure', async ({ request }) => {
     const invalidBody = { user: 'wrong', pass: 'wrong' }
     const response = await request.post('https://backend.tallinn-learning.ee/login/student', {
       data: invalidBody,
