@@ -2,29 +2,48 @@ import { expect, test } from '@playwright/test'
 import { StatusCodes } from 'http-status-codes'
 import { LoginDto } from '../dto/login-dto'
 
-test('should return token with correct username and password', async ({ request }) => {
-  // prepare request body
-  // const requestBody = new LoginDto('eimanteb', 'whe7s5qbYbfT2n')
-  const requestBody = LoginDto.createLoginDto()
-  // send POST request to server
-  const response = await request.post('https://backend.tallinn-learning.ee/login/student', {
-    data: requestBody,
+test.describe('Positive scenario', () => {
+  test('should return token with correct username and password', async ({ request }) => {
+    const requestBody = LoginDto.createLoginDto()
+    const response = await request.post('https://backend.tallinn-learning.ee/login/student', {
+      data: requestBody,
+    })
+    expect(response.status()).toBe(StatusCodes.OK)
+    const jwtValue = await response.text()
+    const jwtRegex = /^eyJhb[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/
+    expect(jwtValue).toMatch(jwtRegex)
+    expect(jwtValue).not.toBe('')
   })
-
-  console.log('response body and token', await response.text())
-  expect(response.status()).toBe(StatusCodes.OK)
 })
 
-// negative test case
-test('should not return token with incorrect username and password', async ({ request }) => {
-  // prepare request body
-  const requestBody = new LoginDto('eimantebbb', '')
+test.describe('Negative scenarios', () => {
+  test('should not return token with incorrect username and password', async ({ request }) => {
+    const requestBody = new LoginDto('eimantebbb', '')
+    const response = await request.post('https://backend.tallinn-learning.ee/login/student', {
+      data: requestBody,
+    })
+    const responseBody = await response.text()
+    const jwtRegex = /^eyJhb[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/
 
-  // send POST request to server
-  const response = await request.post('https://backend.tallinn-learning.ee/login/student', {
-    data: requestBody,
+    expect(response.status()).toBe(StatusCodes.UNAUTHORIZED)
+    expect(responseBody).not.toMatch(jwtRegex)
   })
 
-  console.log('response body and token', await response.text())
-  expect(response.status()).toBe(StatusCodes.UNAUTHORIZED)
+  test('should not return token with incorrect HTTP method', async ({ request }) => {
+    const requestBody = LoginDto.createLoginDto()
+    const response = await request.get('https://backend.tallinn-learning.ee/login/student', {
+      data: requestBody,
+    })
+
+    expect(response.status()).toBe(StatusCodes.METHOD_NOT_ALLOWED)
+  })
+
+  test('should respond with 401 for invalid body structure', async ({ request }) => {
+    const invalidBody = { user: 'wrong', pass: 'wrong' }
+    const response = await request.post('https://backend.tallinn-learning.ee/login/student', {
+      data: invalidBody,
+    })
+
+    expect(response.status()).toBe(StatusCodes.UNAUTHORIZED)
+  })
 })
